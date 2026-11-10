@@ -1,0 +1,73 @@
+﻿@model University_Cafeteria_Task8.Models.SupplyRequest
+@using University_Cafeteria_Task8.Models
+
+@{
+    var products = ViewBag.Products as List<Product>
+                   ?? new List<Product>();
+
+    var requestItem = Model.RequestItems.FirstOrDefault();
+}
+
+<h2>Edit Supply Request</h2>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
+@if (requestItem != null)
+{
+    <form action="@Url.Action("Edit", "SupplyRequest")"
+          method="post">
+
+        @Html.AntiForgeryToken()
+
+        <input type="hidden" name="id" value="@Model.Id" />
+
+        <div class="mb-3">
+            <label>Product</label>
+
+            <select name="productId"
+                    class="form-control" required>
+
+                @foreach (var product in products)
+                {
+                    if (product.Id == requestItem.ProductId)
+                    {
+                        <option value="@product.Id" selected>
+                            @product.Name - @product.Price JD
+                        </option>
+                    }
+                    else
+                    {
+                        <option value="@product.Id">
+                            @product.Name - @product.Price JD
+                        </option>
+                    }
+                }
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label>Quantity</label>
+
+            <input type="number"
+                   name="quantity"
+                   value="@requestItem.Quantity"
+                   min="1"
+                   class="form-control"
+                   required />
+        </div>
+
+        <button type="submit" class="btn btn-success">
+            Save Changes
+        </button>
+
+        <a href="@Url.Action("Index", "SupplyRequest")"
+           class="btn btn-secondary">
+            Cancel
+        </a>
+    </form>
+}

@@ -1,0 +1,128 @@
+﻿@model List<University_Cafeteria_Task8.Models.SupplyRequest>
+@using System.Security.Claims
+
+@{
+    var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+    bool isAdmin = User.IsInRole("Admin") ||
+                   User.IsInRole("SuperAdmin");
+}
+
+<h2>Supply Requests List</h2>
+
+<a href="@Url.Action("Create", "SupplyRequest")"
+   class="btn btn-primary">
+    Add New Request
+</a>
+
+<br />
+<br />
+
+<div class="table-responsive">
+    <table class="table table-bordered align-middle">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Request Date</th>
+                <th>Total Price</th>
+                <th>Status</th>
+                <th>Products</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.RequestDate.ToShortDateString()</td>
+                    <td>@item.TotalPrice</td>
+                    <td>@item.Status</td>
+
+                    <td>
+                        @foreach (var product in item.RequestItems)
+                        {
+                            <div>
+                                @(product.Product?.Name ?? "Unknown Product")
+                                - Quantity: @product.Quantity
+                            </div>
+                        }
+                    </td>
+
+                    <td>
+                        <div class="d-flex gap-2 flex-nowrap">
+
+                            @* Edit and Delete for request owner *@
+                            @if (item.Status == "Pending" &&
+                                 item.UserId == currentUserId)
+                            {
+                                <a href="@Url.Action("Edit", "SupplyRequest", new { id = item.Id })"
+                                   class="btn btn-primary">
+                                    Edit
+                                </a>
+
+                                <form action="@Url.Action("Delete", "SupplyRequest")"
+                                      method="post" class="m-0">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <input type="hidden"
+                                           name="id"
+                                           value="@item.Id" />
+
+                                    <button type="submit"
+                                            class="btn btn-danger"
+                                            onclick="return confirm('Delete this request?')">
+                                        Delete
+                                    </button>
+                                </form>
+                            }
+
+                            @* Details for users allowed to view request *@
+                            <a href="@Url.Action("Details", "SupplyRequest", new { id = item.Id })"
+                               class="btn btn-info">
+                                Details
+                            </a>
+
+                            @* Approve and Reject for Admin only *@
+                            @if (isAdmin && item.Status == "Pending")
+                            {
+                                <form action="@Url.Action("Approve", "SupplyRequest")"
+                                      method="post" class="m-0">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <input type="hidden"
+                                           name="id"
+                                           value="@item.Id" />
+
+                                    <button type="submit"
+                                            class="btn btn-success">
+                                        Approve
+                                    </button>
+                                </form>
+
+                                <form action="@Url.Action("Reject", "SupplyRequest")"
+                                      method="post" class="m-0">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <input type="hidden"
+                                           name="id"
+                                           value="@item.Id" />
+
+                                    <button type="submit"
+                                            class="btn btn-danger">
+                                        Reject
+                                    </button>
+                                </form>
+                            }
+
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

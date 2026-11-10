@@ -1,0 +1,55 @@
+﻿@model University_Cafeteria_Task8.Models.SupplyRequest
+
+<h2>Supply Request Details</h2>
+
+<table class="table table-bordered">
+    <tr>
+        <th>Request Id</th>
+        <td>@Model.Id</td>
+    </tr>
+
+    <tr>
+        <th>Request Date</th>
+        <td>@Model.RequestDate</td>
+    </tr>
+
+    <tr>
+        <th>Total Price</th>
+        <td>@Model.TotalPrice</td>
+    </tr>
+
+    <tr>
+        <th>Status</th>
+        <td>@Model.Status</td>
+    </tr>
+</table>
+
+<h3>Requested Products</h3>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Unit Price</th>
+            <th>Subtotal</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model.RequestItems)
+        {
+            <tr>
+                <td>@item.Product?.Name</td>
+                <td>@item.Quantity</td>
+                <td>@item.Price</td>
+                <td>@(item.Price * item.Quantity)</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a href="@Url.Action("Index", "SupplyRequest")"
+   class="btn btn-secondary">
+    Back
+</a>

@@ -1,0 +1,77 @@
+﻿
+@using Microsoft.AspNetCore.Identity
+
+@{
+    var users = ViewBag.Users as List<IdentityUser>
+                ?? new List<IdentityUser>();
+
+    var roles = ViewBag.Roles as List<IdentityRole>
+                ?? new List<IdentityRole>();
+}
+
+<h2>Manage Users</h2>
+
+<br />
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Assign Role</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var user in users)
+        {
+            <tr>
+                <td>@user.Email</td>
+
+                <td>
+                    <form action="@Url.Action("AssignRole", "Admin")"
+                          method="post">
+
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden"
+                               name="userId"
+                               value="@user.Id" />
+
+                        <select name="roleId" class="form-select">
+                            @foreach (var role in roles)
+                            {
+                                <option value="@role.Id">
+                                    @role.Name
+                                </option>
+                            }
+                        </select>
+
+                        <button type="submit"
+                                class="btn btn-primary mt-2">
+                            Save Role
+                        </button>
+                    </form>
+                </td>
+
+                <td>
+                    <form action="@Url.Action("DeleteUser", "Admin")"
+                          method="post"
+                          onsubmit="return confirm('Are you sure you want to delete this user?');">
+
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden"
+                               name="userId"
+                               value="@user.Id" />
+
+                        <button type="submit"
+                                class="btn btn-danger">
+                            Delete
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

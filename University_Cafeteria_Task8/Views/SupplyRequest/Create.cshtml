@@ -1,0 +1,60 @@
+﻿@model University_Cafeteria_Task8.Models.SupplyRequest
+@using University_Cafeteria_Task8.Models
+
+@{
+    var products = ViewBag.Products as List<Product>
+                   ?? new List<Product>();
+}
+
+<h2>Create Supply Request</h2>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
+<form action="@Url.Action("Create", "SupplyRequest")"
+      method="post">
+
+    @Html.AntiForgeryToken()
+
+    <div class="mb-3">
+        <label>Select Product</label>
+
+        <select name="productId"
+                class="form-control" required>
+
+            <option value="">Select Product</option>
+
+            @foreach (var item in products)
+            {
+                <option value="@item.Id">
+                    @item.Name - @item.Price JD
+                </option>
+            }
+
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label>Quantity</label>
+
+        <input type="number"
+               name="quantity"
+               min="1"
+               class="form-control"
+               required />
+    </div>
+
+    <button type="submit" class="btn btn-success">
+        Submit Request
+    </button>
+
+    <a href="@Url.Action("Index", "SupplyRequest")"
+       class="btn btn-secondary">
+        Back
+    </a>
+
+</form>

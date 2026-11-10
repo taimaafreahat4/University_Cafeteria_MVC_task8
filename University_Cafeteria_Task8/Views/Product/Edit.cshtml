@@ -1,0 +1,62 @@
+﻿@model University_Cafeteria_Task8.Models.Product
+@using System.Globalization
+
+<h2>Edit Product</h2>
+
+<form action="@Url.Action("Edit", "Product")"
+      method="post">
+
+    @Html.AntiForgeryToken()
+
+    <input type="hidden"
+           name="Id"
+           value="@Model.Id" />
+
+    <div class="mb-3">
+        <label>Product Name</label>
+        <input type="text"
+               name="Name"
+               value="@Model.Name"
+               class="form-control"
+               required />
+    </div>
+
+    <div class="mb-3">
+        <label>Description</label>
+        <input type="text"
+               name="Description"
+               value="@Model.Description"
+               class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Price</label>
+        <input type="number"
+               name="Price"
+               value="@Model.Price.ToString(CultureInfo.InvariantCulture)"
+               step="0.01"
+               min="0"
+               class="form-control"
+               required />
+    </div>
+
+    <div class="mb-3">
+        <label>Quantity</label>
+        <input type="number"
+               name="Quantity"
+               value="@Model.Quantity"
+               min="0"
+               class="form-control"
+               required />
+    </div>
+
+    <button type="submit" class="btn btn-success">
+        Save Changes
+    </button>
+
+    <a href="@Url.Action("Index", "Product")"
+       class="btn btn-secondary">
+        Cancel
+    </a>
+
+</form>

@@ -1,0 +1,51 @@
+﻿
+<h2>Add New Product</h2>
+
+<form action="@Url.Action("Create", "Product")" method="post">
+
+    @Html.AntiForgeryToken()
+
+    <div class="mb-3">
+        <label>Product Name</label>
+        <input type="text"
+               name="Name"
+               class="form-control"
+               required />
+    </div>
+
+    <div class="mb-3">
+        <label>Description</label>
+        <input type="text"
+               name="Description"
+               class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Price</label>
+        <input type="number"
+               name="Price"
+               step="0.01"
+               min="0"
+               class="form-control"
+               required />
+    </div>
+
+    <div class="mb-3">
+        <label>Quantity</label>
+        <input type="number"
+               name="Quantity"
+               min="0"
+               class="form-control"
+               required />
+    </div>
+
+    <button type="submit" class="btn btn-success">
+        Save Product
+    </button>
+
+    <a href="@Url.Action("Index", "Product")"
+       class="btn btn-secondary">
+        Cancel
+    </a>
+
+</form>

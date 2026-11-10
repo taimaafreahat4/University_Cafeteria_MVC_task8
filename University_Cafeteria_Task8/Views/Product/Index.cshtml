@@ -1,0 +1,90 @@
+﻿@model List<University_Cafeteria_Task8.Models.Product>
+
+@{
+    bool isAdmin = User.IsInRole("Admin") ||
+                   User.IsInRole("SuperAdmin");
+}
+
+<h2>Products List</h2>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
+@if (isAdmin)
+{
+    <a href="@Url.Action("Create", "Product")"
+       class="btn btn-primary">
+        Add New Product
+    </a>
+}
+
+<br />
+<br />
+
+<table class="table table-bordered">
+
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Name</td>
+                <td>@item.Description</td>
+                <td>@item.Price</td>
+                <td>@item.Quantity</td>
+               
+
+                <td>
+                    <div class="d-flex gap-2">
+
+                        <a href="@Url.Action("Details", "Product", new { id = item.Id })"
+                           class="btn btn-info">
+                            Details
+                        </a>
+
+                        @if (isAdmin)
+                        {
+                            <a href="@Url.Action("Edit", "Product", new { id = item.Id })"
+                               class="btn btn-warning">
+                                Edit
+                            </a>
+
+                            <form action="@Url.Action("Delete", "Product")"
+                                  method="post">
+
+                                @Html.AntiForgeryToken()
+
+                                <input type="hidden"
+                                       name="id"
+                                       value="@item.Id" />
+
+                                <button type="submit"
+                                        class="btn btn-danger"
+                                        onclick="return confirm('Are you sure you want to delete this product?')">
+                                    Delete
+                                </button>
+
+                            </form>
+                        }
+                        
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
